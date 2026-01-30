@@ -9,4 +9,6 @@ Router.post('/signup',signup);
 Router.post('/login', login);
 Router.post('/logout', logout);
 
+Router.post("/onboarding", protectRoute ,onboarding);
+
 export default Router;
