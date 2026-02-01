@@ -1,32 +1,40 @@
 import { Link } from "react-router-dom";
 import { getLanguageFlag } from "../lib/utils.jsx";
+import { MessageCircle, Video } from "lucide-react";
 
 const FriendCard = ({ friend }) => {
   return (
     <div className="card bg-base-200 hover:shadow-md transition-shadow">
-      <div className="card-body p-4">
+      <div className="card-body p-3 sm:p-4">
         {/* USER INFO */}
-        <div className="flex items-center gap-3 mb-3">
-          <div className="avatar size-12">
-            <img src={friend.profilePic} alt={friend.fullName} />
+        <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+          <div className="avatar w-10 h-10 sm:w-12 sm:h-12 rounded-full">
+            <img src={friend.profilePic} alt={friend.fullName} className="rounded-full" />
           </div>
-          <h3 className="font-semibold truncate">{friend.fullName}</h3>
+          <h3 className="font-semibold truncate text-sm sm:text-base">{friend.fullName}</h3>
         </div>
 
-        <div className="flex flex-wrap gap-1.5 mb-3">
-          <span className="badge badge-secondary text-xs">
+        <div className="flex flex-wrap gap-1 sm:gap-1.5 mb-2 sm:mb-3">
+          <span className="badge badge-secondary text-[10px] sm:text-xs">
             {getLanguageFlag(friend.nativeLanguage)}
             Native: {friend.nativeLanguage}
           </span>
-          <span className="badge badge-outline text-xs">
+          <span className="badge badge-outline text-[10px] sm:text-xs">
             {getLanguageFlag(friend.learningLanguage)}
             Learning: {friend.learningLanguage}
           </span>
         </div>
 
-        <Link to={`/chat/${friend._id}`} className="btn btn-outline w-full">
-          Message
-        </Link>
+        <div className="flex gap-2">
+          <Link to={`/chat/${friend._id}`} className="btn btn-primary btn-sm flex-1">
+            <MessageCircle className="w-4 h-4" />
+            <span className="hidden xs:inline">Message</span>
+          </Link>
+          <Link to={`/call/${friend._id}`} className="btn btn-secondary btn-sm flex-1">
+            <Video className="w-4 h-4" />
+            <span className="hidden xs:inline">Call</span>
+          </Link>
+        </div>
       </div>
     </div>
   );
