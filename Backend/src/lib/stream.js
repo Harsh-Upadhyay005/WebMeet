@@ -3,11 +3,11 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const apiKey = process.env.STEAM_API_KEY;
-const apiSecret = process.env.STEAM_API_SECRET;
+const apiKey = process.env.STREAM_API_KEY;
+const apiSecret = process.env.STREAM_API_SECRET;
 
 if (!apiKey || !apiSecret) {
-    throw new Error('STEAM_API_KEY and STEAM_API_SECRET must be defined in .env file');
+    throw new Error('STREAM_API_KEY and STREAM_API_SECRET must be defined in .env file');
 }
 
 const streamClient = StreamChat.getInstance(apiKey, apiSecret);
