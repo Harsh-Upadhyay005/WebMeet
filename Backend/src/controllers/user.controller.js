@@ -94,8 +94,8 @@ export async function acceptFriendRequest(req, res) {
         if(friendRequest.recipient.toString() !== req.user.id) {
             return res.status(403).json({ message: "You are not authorized to accept this friend request" });
         }
-        friendsRequest.status = "accepted";
-        await friendsRequest.save();
+        friendRequest.status = "accepted";
+        await friendRequest.save();
 
         // update both users' friends list
 

@@ -24,7 +24,7 @@ router.post("/friend-request/:id", sendFriendRequest);
 router.put("/friend-request/:id/accept", acceptFriendRequest);
 // router.post("/friend-request/:id/reject", rejectFriendRequest);
 
-router.get("/friend-requests", getFriendRequests);
-router.get("/outgoing-friend-requests", getOutgoingFriendReqquests);
+router.get("/friend-request", getFriendRequests);
+router.get("/outgoing-friend-request", getOutgoingFriendReqquests);
 
 export default router;
