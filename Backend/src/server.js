@@ -20,7 +20,7 @@ const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:5174',
     process.env.CLIENT_URL,
-    'https://your-app.vercel.app' // Replace with your actual Vercel domain after deployment
+    'https://web-meet-liart.vercel.app' // Replace with your actual Vercel domain after deployment
 ].filter(Boolean);
 
 app.use(cors({
