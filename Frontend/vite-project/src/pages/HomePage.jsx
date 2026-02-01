@@ -8,6 +8,7 @@ import {
 } from "../lib/api";
 import { Link } from "react-router-dom";
 import { CheckCircleIcon, MapPinIcon, UserPlusIcon, UsersIcon } from "lucide-react";
+import toast from "react-hot-toast";
 
 import { capitalize, getLanguageFlag } from "../lib/utils.jsx";
 
@@ -34,7 +35,13 @@ const HomePage = () => {
 
   const { mutate: sendRequestMutation, isPending } = useMutation({
     mutationFn: sendFriendRequest,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] });
+      toast.success("Friend request sent! 🎉");
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || "Failed to send friend request");
+    },
   });
 
   const outgoingRequestsIds = useMemo(() => {
