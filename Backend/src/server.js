@@ -50,13 +50,6 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK', message: 'Server is running' });
 });
 
-if(process.env.NODE_ENV === 'production') {
-    app.use(express.static( path.join(__dirname, '../Frontend/vite-project/dist') ));
-    app.get('*', (req, res) => {
-        res.sendFile( path.join(__dirname, '../Frontend/vite-project/dist/index.html') );
-    });
-}
-
 app.listen (PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     connetdb();
