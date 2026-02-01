@@ -7,7 +7,7 @@ const useAuthUser = () => {
     queryKey: ['authUser'],
     queryFn: getAuthUser,
     retry: false, // auth check
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 60 * 1000, // 5 hours
     refetchOnWindowFocus: false,
   });
   
