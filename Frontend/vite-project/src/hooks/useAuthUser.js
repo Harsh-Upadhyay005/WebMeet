@@ -3,7 +3,7 @@ import { getAuthUser } from '../lib/api.js'
 
 
 const useAuthUser = () => {
-  const { data, isLoading, error, isFetching } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['authUser'],
     queryFn: getAuthUser,
     retry: false, // auth check
