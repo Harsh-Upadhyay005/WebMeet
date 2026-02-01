@@ -9,6 +9,10 @@ export const login = async (loginData) => {
       const response = await axiosInstance.post('/api/auth/login', loginData)
       return response.data
     };
+export const logout = async () => {
+      const response = await axiosInstance.post('/api/auth/logout');
+      return response.data;
+    };
 
 export const getAuthUser = async () => {
       const response = await axiosInstance.get('/api/auth/me');
@@ -17,5 +21,33 @@ export const getAuthUser = async () => {
 
 export const completeOnboarding = async (userData) => {
       const response = await axiosInstance.post('/api/auth/onboarding', userData);
+      return response.data;
+    }
+export async function getUserFriends() {
+      const response = await axiosInstance.get('/api/users/friends');
+      return response.data;
+    }
+export async function getRecommendedUsers() {
+      const response = await axiosInstance.get('/api/users');
+      return response.data;
+    }
+export async function getOutgoingFriendReqs() {
+      const response = await axiosInstance.get('/api/users/outgoing-friend-request');
+      return response.data;
+    }
+export async function sendFriendRequest(userId) {
+      const response = await axiosInstance.post(`/api/users/friend-request/${userId}`);
+      return response.data;
+    }
+export async function getFriendRequests() {
+      const response = await axiosInstance.get('/api/users/friend-request');
+      return response.data;
+    }
+export async function acceptFriendRequest(requestId) {
+      const response = await axiosInstance.put(`/api/users/friend-request/${requestId}/accept`);
+      return response.data;
+    }
+export async function getStreamToken() {
+      const response = await axiosInstance.get('/api/chat/token');
       return response.data;
     }
