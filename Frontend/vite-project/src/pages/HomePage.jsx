@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import {
   getOutgoingFriendReqs,
   getRecommendedUsers,
@@ -9,14 +9,13 @@ import {
 import { Link } from "react-router-dom";
 import { CheckCircleIcon, MapPinIcon, UserPlusIcon, UsersIcon } from "lucide-react";
 
-import { capitialize } from "../lib/utils";
+import { capitalize, getLanguageFlag } from "../lib/utils.jsx";
 
-import FriendCard, { getLanguageFlag } from "../components/NoFriendsFound.jsx";
+import FriendCard from "../components/FriendCard.jsx";
 import NoFriendsFound from "../components/NoFriendsFound.jsx";
 
 const HomePage = () => {
   const queryClient = useQueryClient();
-  const [outgoingRequestsIds, setOutgoingRequestsIds] = useState(new Set());
 
   const { data: friends = [], isLoading: loadingFriends } = useQuery({
     queryKey: ["friends"],
@@ -38,14 +37,14 @@ const HomePage = () => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] }),
   });
 
-  useEffect(() => {
+  const outgoingRequestsIds = useMemo(() => {
     const outgoingIds = new Set();
     if (outgoingFriendReqs && outgoingFriendReqs.length > 0) {
       outgoingFriendReqs.forEach((req) => {
         outgoingIds.add(req.recipient._id);
       });
-      setOutgoingRequestsIds(outgoingIds);
     }
+    return outgoingIds;
   }, [outgoingFriendReqs]);
 
   return (
@@ -127,11 +126,11 @@ const HomePage = () => {
                       <div className="flex flex-wrap gap-1.5">
                         <span className="badge badge-secondary">
                           {getLanguageFlag(user.nativeLanguage)}
-                          Native: {capitialize(user.nativeLanguage)}
+                          Native: {capitalize(user.nativeLanguage)}
                         </span>
                         <span className="badge badge-outline">
                           {getLanguageFlag(user.learningLanguage)}
-                          Learning: {capitialize(user.learningLanguage)}
+                          Learning: {capitalize(user.learningLanguage)}
                         </span>
                       </div>
 
