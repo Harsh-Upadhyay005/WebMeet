@@ -1,15 +1,22 @@
-import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getAuthUser } from '../lib/api.js'
 
 
 const useAuthUser = () => {
-  const authUser = useQuery({
+  const { data, isLoading, error, isFetching } = useQuery({
     queryKey: ['authUser'],
     queryFn: getAuthUser,
     retry: false, // auth check
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
   });
-  return {isLoading: authUser.isLoading, authUser: authUser.data?.user || null};
+  
+  // Only show loading on initial fetch, not on errors or refetches
+  return {
+    isLoading: isLoading && !error, 
+    authUser: data?.user || null,
+    error
+  };
 }
 
 
