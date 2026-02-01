@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Video } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { axiosInstance } from '../lib/axios'
 import toast from 'react-hot-toast'
@@ -12,15 +12,22 @@ const LoginPage = () => {
   });
 
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   const loginMutation = useMutation({
     mutationFn: async (data) => {
       const response = await axiosInstance.post('/api/auth/login', data)
       return response.data
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success('Login successful!')
       queryClient.invalidateQueries(['authUser'])
+      // Navigate based on onboarding status
+      if (data.user?.isOnboarded) {
+        navigate('/')
+      } else {
+        navigate('/onboarding')
+      }
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || 'Login failed')

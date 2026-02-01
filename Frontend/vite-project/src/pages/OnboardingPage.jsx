@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import React from 'react'
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 import useAuthUser from '../hooks/useAuthUser.js';
 import { completeOnboarding } from '../lib/api.js';
 import { Camera, CameraIcon, ShuffleIcon } from 'lucide-react';
@@ -11,6 +12,7 @@ import { LANGUAGES } from '../constants/index.js';
 const OnboardingPage = () => {
  const {authUser} = useAuthUser();
  const queryClient = useQueryClient();
+ const navigate = useNavigate();
 
  const [formState, setFormState] = React.useState({
   fullName: authUser?.fullName || '',
@@ -25,6 +27,7 @@ const OnboardingPage = () => {
   onSuccess: () => {
     toast.success('Profile onboarded successfully');
     queryClient.invalidateQueries({queryKey: ["authUser"]});
+    navigate('/');
   },
   onError: (error) => {
     

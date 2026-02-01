@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Video } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import { signup } from '../lib/api'
@@ -13,12 +13,14 @@ const SignUpPage = () => {
   })
 
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   const { mutate: signupMutation } = useMutation({
     mutationFn: signup,
     onSuccess: () => {
       toast.success('Account created successfully!')
       queryClient.invalidateQueries(['authUser'])
+      navigate('/onboarding')
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || 'Signup failed')
