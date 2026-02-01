@@ -11,11 +11,14 @@ import OnboardingPage from './pages/OnboardingPage.jsx'
 import { Toaster } from 'react-hot-toast';
 import useAuthUser from './hooks/useAuthUser.js'
 import PageLoader from './components/PageLoader.jsx'
+import Layout from './components/Layout.jsx'
+import { useThemeStore } from './store/useThemeStore.js'
 
 
 const App = () => {
   // tanstack query can be used here for global data fetching
  const {isLoading, authUser} = useAuthUser()
+ const theme = useThemeStore((state) => state.theme);
 
  const isAuthenticated = Boolean(authUser)
  const isOnboarded = authUser?.isOnboarded
@@ -27,10 +30,10 @@ const App = () => {
   }
 
   return (
-    <div className='h-screen' data-theme="coffee">
+    <div className='h-screen bg-base-100' data-theme={theme}>
       <Routes>
         <Route path='/' element={isAuthenticated && isOnboarded ? (
-          <Layout>
+          <Layout showSidebar={true}>
             <HomePage />
           </Layout>
         ) : (
@@ -40,9 +43,19 @@ const App = () => {
        />
         <Route path='/signup' element={!isAuthenticated ? <SignUpPage /> : <Navigate to= {isOnboarded ? "/" : "/onboarding"} />} />
         <Route path='/login' element={!isAuthenticated ? <LoginPage /> : <Navigate to={isOnboarded ? "/" : "/onboarding"} />} />
-        <Route path='/notification' element={!isAuthenticated ? <NotificationPage /> : <Navigate to="/login" />} />
-        <Route path='/call' element={isAuthenticated ? <CallPage /> : <Navigate to="/login" />} />
-        <Route path='/chat' element={isAuthenticated ? <ChatPage /> : <Navigate to="/login" />} />
+        <Route path='/notification' element={isAuthenticated && isOnboarded ? (
+          <Layout showSidebar={true}>
+            <NotificationPage />
+          </Layout>
+        ) : <Navigate to="/login" />} />
+        <Route path='/call/:id' element={isAuthenticated && isOnboarded ? (
+          <CallPage />
+        ) : <Navigate to="/login" />} />
+        <Route path='/chat/:id' element={isAuthenticated && isOnboarded ? (
+          <Layout showSidebar={false}>
+            <ChatPage />
+          </Layout>
+        ) : <Navigate to="/login" />} />
         <Route path='/onboarding' element={isAuthenticated ? (!isOnboarded ? <OnboardingPage /> : <Navigate to="/" />): <Navigate to="/login" />} />
 
       </Routes>
