@@ -4,6 +4,7 @@ import { BellIcon, ClockIcon, MessageSquareIcon, UserCheckIcon } from "lucide-re
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import NoNotificationsFound from "../components/NoNotificationsFound";
+import LazyImage from "../components/LazyImage";
 
 const NotificationsPage = () => {
   const queryClient = useQueryClient();
@@ -57,7 +58,7 @@ const NotificationsPage = () => {
                         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                           <div className="flex items-center gap-3 flex-1">
                             <div className="avatar w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-base-300">
-                              <img src={request.sender.profilePic} alt={request.sender.fullName} className="rounded-full" />
+                              <LazyImage src={request.sender.profilePic} alt={request.sender.fullName} className="w-full h-full object-cover rounded-full" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <h3 className="font-semibold text-sm sm:text-base">{request.sender.fullName}</h3>
@@ -99,10 +100,10 @@ const NotificationsPage = () => {
                         <div className="flex flex-col sm:flex-row sm:items-start gap-3">
                           <div className="flex items-center gap-3 flex-1">
                             <div className="avatar w-10 h-10 rounded-full">
-                              <img
+                              <LazyImage
                                 src={notification.recipient.profilePic}
                                 alt={notification.recipient.fullName}
-                                className="rounded-full"
+                                className="w-full h-full object-cover rounded-full"
                               />
                             </div>
                             <div className="flex-1 min-w-0">
