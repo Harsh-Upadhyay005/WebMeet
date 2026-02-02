@@ -1,6 +1,6 @@
 # WebMeet - Real-Time Communication Platform
 
-A full-stack real-time communication platform featuring instant messaging and video calling capabilities, powered by [Stream](https://getstream.io/).
+A full-stack real-time communication platform featuring instant messaging and video calling capabilities, with the help of [Stream](https://getstream.io/).
 
 ![WebMeet](https://img.shields.io/badge/WebMeet-RTC%20Platform-blue)
 
