@@ -21,6 +21,10 @@ const LoginPage = () => {
     },
     onSuccess: (data) => {
       toast.success('Login successful!')
+      // Store token in localStorage
+      if (data.token) {
+        localStorage.setItem('authToken', data.token)
+      }
       // Set the authUser query data directly
       queryClient.setQueryData(['authUser'], data)
       // Navigate based on onboarding status

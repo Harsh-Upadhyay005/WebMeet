@@ -5,3 +5,17 @@ export const axiosInstance = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
 });
+
+// Add token to every request if it exists
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);

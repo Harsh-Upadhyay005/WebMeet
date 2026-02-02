@@ -19,6 +19,10 @@ const SignUpPage = () => {
     mutationFn: signup,
     onSuccess: (data) => {
       toast.success('Account created successfully!')
+      // Store token in localStorage
+      if (data.token) {
+        localStorage.setItem('authToken', data.token)
+      }
       // Set the authUser query data directly
       queryClient.setQueryData(['authUser'], data)
       navigate('/onboarding')
