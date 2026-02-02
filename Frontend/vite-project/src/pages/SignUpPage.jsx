@@ -145,13 +145,13 @@ const SignUpPage = () => {
           <div className="max-w-md p-8">
             {/* Illustration */}
             <div className="relative aspect-square max-w-sm mx-auto">
-              <img src="/dist/i.svg" alt="Language connection illustration" className="w-full h-full" />
+              <img src="/i.svg" alt="Language connection illustration" className="w-full h-full" />
             </div>
 
             <div className="text-center space-y-3 mt-6">
-              <h2 className="text-xl font-semibold text-white">Connect with language partners worldwide</h2>
+              <h2 className="text-xl font-semibold text-white">Connect with Friends worldwide</h2>
               <p className="opacity-70 text-white">
-                Practice conversations, make friends, and improve your language skills together
+                Practice conversations, make friends, and immerse yourself in new cultures—all from the comfort of your home.
               </p>
             </div>
           </div>
