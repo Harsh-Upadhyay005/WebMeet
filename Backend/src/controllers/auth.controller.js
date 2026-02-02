@@ -88,23 +88,33 @@ export async function login(req, res) {
         return res.status(500).json({ message: "internal Server Error" });
     }
 }
-export function logout(req, res) {
-    res.clearCookie("jwt");
-    res.status(200).json({ message: "Logged out successfully" });
+export async function logout(req, res) {
+    try {
+        // Clear the JWT cookie with same options as when it was set
+        res.clearCookie("jwt", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        });
+        
+        res.status(200).json({ success: true, message: "Logged out successfully" });
+    } catch (error) {
+        console.error("Logout Error:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 }
 export async function onboard(req, res) {
     try {
         const userId = req.user._id;
-        const {fullName, bio, nativeLanguage, learningLanguage, location} = req.body;
+        const {fullName, bio, nativeLanguage, location} = req.body;
 
-        if(!fullName || !bio || !nativeLanguage || !learningLanguage || !location) {
+        if(!fullName || !bio || !nativeLanguage || !location) {
             return res.status(400).json({
                 message: "All fields are required for onboarding",
                 missingFields: [
                     !fullName && "fullName",
                     !bio && "bio",
                     !nativeLanguage && "nativeLanguage",
-                    !learningLanguage && "learningLanguage",
                     !location && "location",
             ].filter(Boolean),
             });
@@ -136,6 +146,56 @@ export async function onboard(req, res) {
         res.status(200).json({ success: true, user: updatedUser });
     } catch (error) {
         console.error("Onboarding Error:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+export async function updateProfile(req, res) {
+    try {
+        const userId = req.user._id;
+        const { fullName, bio, nativeLanguage, location, profilePic } = req.body;
+
+        if (!fullName || !bio || !nativeLanguage || !location) {
+            return res.status(400).json({
+                message: "All fields are required",
+                missingFields: [
+                    !fullName && "fullName",
+                    !bio && "bio",
+                    !nativeLanguage && "nativeLanguage",
+                    !location && "location",
+                ].filter(Boolean),
+            });
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            {
+                fullName,
+                bio,
+                nativeLanguage,
+                location,
+                profilePic,
+            },
+            { new: true }
+        ).select("-password");
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        try {
+            await upsertStreamUser({
+                id: updatedUser._id.toString(),
+                name: updatedUser.fullName,
+                profilePic: updatedUser.profilePic || "",
+            });
+        } catch (streamError) {
+            console.error("Error upserting Stream user:", streamError.message);
+        }
+
+        res.status(200).json({ success: true, user: updatedUser });
+    } catch (error) {
+        console.error("Update Profile Error:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
