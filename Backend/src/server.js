@@ -19,24 +19,25 @@ const __dirname = path.resolve();
 const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:5174',
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:5174',
     process.env.CLIENT_URL,
-    'https://web-meet-liart.vercel.app' // Replace with your actual Vercel domain after deployment
+    'https://web-meet-liart.vercel.app'
 ].filter(Boolean);
 
 app.use(cors({
-    origin: (origin, callback) => {
+    origin: function (origin, callback) {
         // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
         
-        // Allow all origins that match the pattern for development and production
-        if (allowedOrigins.some(allowed => origin.includes(allowed.replace('https://', '').replace('http://', ''))) || 
-            origin.endsWith('.vercel.app')) {
+        if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
             callback(null, true);
         } else {
+            console.log('CORS blocked origin:', origin);
             callback(new Error('Not allowed by CORS'));
         }
     },
-    credentials: true, // allow frontend to send cookies
+    credentials: true,
 }));
 app.use(express.json());
 app.use(cookieParser());
