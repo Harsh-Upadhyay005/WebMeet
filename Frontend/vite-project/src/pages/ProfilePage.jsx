@@ -6,6 +6,7 @@ import useAuthUser from '../hooks/useAuthUser';
 import { updateProfile } from '../lib/api';
 import { Camera, ShuffleIcon, ArrowLeft, Save } from 'lucide-react';
 import { LANGUAGES } from '../constants/index.js';
+import LazyImage from '../components/LazyImage';
 
 const ProfilePage = () => {
   const { authUser } = useAuthUser();
@@ -43,8 +44,17 @@ const ProfilePage = () => {
   const handleRandomAvatar = () => {
     const idx = Math.floor(Math.random() * 100) + 1;
     const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
-    setFormState({ ...formState, profilePic: randomAvatar });
-    toast.success('Random avatar generated');
+    
+    // Preload the image before setting it
+    const img = new Image();
+    img.src = randomAvatar;
+    img.onload = () => {
+      setFormState({ ...formState, profilePic: randomAvatar });
+      toast.success('Random avatar generated');
+    };
+    img.onerror = () => {
+      toast.error('Failed to load avatar, please try again');
+    };
   };
 
   return (
@@ -65,10 +75,11 @@ const ProfilePage = () => {
               <div className="flex flex-col items-center justify-center space-y-4">
                 <div className="size-32 rounded-full bg-base-300 overflow-hidden ring-4 ring-primary/20">
                   {formState.profilePic ? (
-                    <img
+                    <LazyImage
                       src={formState.profilePic}
                       alt="Profile Preview"
                       className="w-full h-full object-cover"
+                      placeholderClassName="w-full h-full bg-base-300"
                     />
                   ) : (
                     <div className="flex items-center justify-center w-full h-full">
