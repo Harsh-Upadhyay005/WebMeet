@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { getLanguageFlag } from "../lib/utils.jsx";
 import { MessageCircle, Video } from "lucide-react";
+import LazyImage from "./LazyImage";
 
 const FriendCard = ({ friend }) => {
   return (
@@ -9,7 +10,7 @@ const FriendCard = ({ friend }) => {
         {/* USER INFO */}
         <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
           <div className="avatar w-10 h-10 sm:w-12 sm:h-12 rounded-full">
-            <img src={friend.profilePic} alt={friend.fullName} className="rounded-full" />
+            <LazyImage src={friend.profilePic} alt={friend.fullName} className="w-full h-full object-cover rounded-full" />
           </div>
           <h3 className="font-semibold truncate text-sm sm:text-base">{friend.fullName}</h3>
         </div>
