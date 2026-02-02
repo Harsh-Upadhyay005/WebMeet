@@ -18,7 +18,6 @@ const OnboardingPage = () => {
   fullName: authUser?.fullName || '',
   bio: authUser?.bio || '',
   nativeLanguage: authUser?.nativeLanguage || '',
-  learningLanguage: authUser?.learningLanguage || '',
   profilePic: authUser?.profilePic || '',
   location: authUser?.location || '',
  });
@@ -165,26 +164,6 @@ const OnboardingPage = () => {
                     </select>
                 </div>
 
-
-                {/* Learning Language */}
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">Learning Language</span>
-                  </label>
-                  <select
-                    name="learningLanguage"
-                    value={formState.learningLanguage}
-                    onChange={(e) => setFormState({ ...formState, learningLanguage: e.target.value})}
-                    className="select select-bordered w-full" //placeholder-white
-                    required
-                  >
-                    {LANGUAGES.map((language) => (
-                      <option key={`learning-${language}`} value={language.toLowerCase()}>
-                        {language}
-                      </option>
-                    ))}
-                    </select>
-                </div>
               </div>
             </div>
             {/* Location Field  */}

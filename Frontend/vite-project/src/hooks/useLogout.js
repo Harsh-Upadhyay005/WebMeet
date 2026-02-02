@@ -1,11 +1,19 @@
 import { logout } from "../lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 const useLogout = () => {
     const queryClient = useQueryClient();
-    const navigate = useNavigate();
+
+    const clearAuthAndRedirect = () => {
+        // Clear token from localStorage
+        localStorage.removeItem('authToken');
+        // Clear all query cache
+        queryClient.clear();
+        toast.success("Logged out successfully");
+        // Hard redirect to ensure clean state
+        window.location.href = "/login";
+    };
 
     const {
     mutate: logoutMutation,
@@ -14,15 +22,12 @@ const useLogout = () => {
 } = useMutation({
         mutationFn: logout,
         onSuccess: () => {
-            toast.success("Logged out successfully");
-            // Clear token from localStorage
-            localStorage.removeItem('authToken');
-            queryClient.setQueryData(["authUser"], null);
-            queryClient.invalidateQueries({ queryKey: ["authUser"] });
-            navigate("/login");
+            clearAuthAndRedirect();
         },
         onError: (error) => {
             console.error("Logout error:", error);
+            // Even if API fails, clear local auth state and redirect
+            clearAuthAndRedirect();
         },
     });
 
