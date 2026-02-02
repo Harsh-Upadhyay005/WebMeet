@@ -84,9 +84,9 @@ const HomePage = () => {
           <div className="mb-6 sm:mb-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Meet New Learners</h2>
+                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Meet New Friends</h2>
                 <p className="opacity-70">
-                  Discover perfect language exchange partners based on your profile
+                  Explore and connect with your friends in WebMeet!
                 </p>
               </div>
             </div>
@@ -111,7 +111,7 @@ const HomePage = () => {
                 return (
                   <div
                     key={user._id}
-                    className="card bg-base-200 hover:shadow-lg transition-all duration-300"
+                    className="card bg-base-100 hover:shadow-lg transition-all duration-300"
                   >
                     <div className="card-body p-5 space-y-4">
                       <div className="flex items-center gap-3">
