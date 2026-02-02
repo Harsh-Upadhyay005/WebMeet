@@ -2,6 +2,7 @@ import React from "react";
 import useAuthUser from "../hooks/useAuthUser";
 import { UsersIcon, Video, HomeIcon, BellIcon } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
+import LazyImage from "./LazyImage";
 
 const Sidebar = () => {
   const { authUser } = useAuthUser();
@@ -48,7 +49,7 @@ const Sidebar = () => {
           <div className="flex items-center gap-3">
             <div className="avatar">
               <div className="w-10 rounded-full">
-                <img src={authUser?.profilePic} alt="User Avatar" />
+                <LazyImage src={authUser?.profilePic} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
               </div>
             </div>
             <div className="flex-1">
@@ -86,7 +87,7 @@ const Sidebar = () => {
           <div className="flex flex-col items-center justify-center flex-1 h-full">
             <div className="avatar">
               <div className="w-8 rounded-full">
-                <img src={authUser?.profilePic} alt="Profile" />
+                <LazyImage src={authUser?.profilePic} alt="Profile" className="w-full h-full object-cover rounded-full" />
               </div>
             </div>
             <span className="text-xs mt-1 truncate max-w-[60px]">{authUser?.fullName?.split(' ')[0]}</span>

@@ -3,6 +3,7 @@ import useAuthUser from "../hooks/useAuthUser";
 import { BellIcon, LogOutIcon, Video, UserIcon } from "lucide-react";
 import ThemeSelector from "./ThemeSelector";
 import { axiosInstance } from "../lib/axios";
+import LazyImage from "./LazyImage";
 
 const Navbar = () => {
   const { authUser } = useAuthUser();
@@ -53,7 +54,7 @@ const Navbar = () => {
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
               <div className="w-9 rounded-full">
-                <img src={authUser?.profilePic} alt="User Avatar" />
+                <LazyImage src={authUser?.profilePic} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
               </div>
             </div>
             <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52 mt-2">
