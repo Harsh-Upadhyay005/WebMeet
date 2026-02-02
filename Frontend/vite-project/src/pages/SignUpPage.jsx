@@ -17,9 +17,10 @@ const SignUpPage = () => {
 
   const { mutate: signupMutation } = useMutation({
     mutationFn: signup,
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success('Account created successfully!')
-      queryClient.invalidateQueries(['authUser'])
+      // Set the authUser query data directly
+      queryClient.setQueryData(['authUser'], data)
       navigate('/onboarding')
     },
     onError: (error) => {

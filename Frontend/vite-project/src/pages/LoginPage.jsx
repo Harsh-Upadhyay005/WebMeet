@@ -21,7 +21,8 @@ const LoginPage = () => {
     },
     onSuccess: (data) => {
       toast.success('Login successful!')
-      queryClient.invalidateQueries(['authUser'])
+      // Set the authUser query data directly
+      queryClient.setQueryData(['authUser'], data)
       // Navigate based on onboarding status
       if (data.user?.isOnboarded) {
         navigate('/')
