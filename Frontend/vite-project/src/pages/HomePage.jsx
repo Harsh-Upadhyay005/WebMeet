@@ -14,6 +14,7 @@ import { capitalize, getLanguageFlag } from "../lib/utils.jsx";
 
 import FriendCard from "../components/FriendCard.jsx";
 import NoFriendsFound from "../components/NoFriendsFound.jsx";
+import LazyImage from "../components/LazyImage";
 
 const HomePage = () => {
   const queryClient = useQueryClient();
@@ -115,7 +116,7 @@ const HomePage = () => {
                     <div className="card-body p-5 space-y-4">
                       <div className="flex items-center gap-3">
                         <div className="avatar size-16 rounded-full">
-                          <img src={user.profilePic} alt={user.fullName} />
+                          <LazyImage src={user.profilePic} alt={user.fullName} className="w-full h-full object-cover rounded-full" />
                         </div>
 
                         <div>
