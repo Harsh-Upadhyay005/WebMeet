@@ -15,6 +15,8 @@ const useLogout = () => {
         mutationFn: logout,
         onSuccess: () => {
             toast.success("Logged out successfully");
+            // Clear token from localStorage
+            localStorage.removeItem('authToken');
             queryClient.setQueryData(["authUser"], null);
             queryClient.invalidateQueries({ queryKey: ["authUser"] });
             navigate("/login");
