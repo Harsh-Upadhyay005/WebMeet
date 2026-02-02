@@ -23,7 +23,6 @@ A full-stack real-time communication platform featuring instant messaging and vi
 - **DaisyUI** - UI Components
 - **React Router** - Navigation
 - **TanStack Query** - Data Fetching & Caching
-- **Zustand** - State Management
 - **Stream Chat React** - Chat Components
 - **Stream Video React SDK** - Video Calling
 
