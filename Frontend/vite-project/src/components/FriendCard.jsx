@@ -19,21 +19,19 @@ const FriendCard = ({ friend }) => {
             {getLanguageFlag(friend.nativeLanguage)}
             Native: {friend.nativeLanguage}
           </span>
-          <span className="badge badge-outline text-[10px] sm:text-xs">
-            {getLanguageFlag(friend.learningLanguage)}
-            Learning: {friend.learningLanguage}
-          </span>
         </div>
 
         <div className="flex gap-2">
           <Link to={`/chat/${friend._id}`} className="btn btn-primary btn-sm flex-1">
             <MessageCircle className="w-4 h-4" />
-            <span className="hidden xs:inline">Message</span>
-          </Link>
-          <Link to={`/call/${friend._id}`} className="btn btn-secondary btn-sm flex-1">
+            <span className="hidden xs:inline">Message</span> /
             <Video className="w-4 h-4" />
             <span className="hidden xs:inline">Call</span>
           </Link>
+          {/* <Link to={`/call/${friend._id}`} className="btn btn-secondary btn-sm flex-1">
+            <Video className="w-4 h-4" />
+            <span className="hidden xs:inline">Call</span>
+          </Link> */}
         </div>
       </div>
     </div>
