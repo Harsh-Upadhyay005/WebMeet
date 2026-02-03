@@ -1,6 +1,6 @@
 import React from "react";
 import useAuthUser from "../hooks/useAuthUser";
-import { UsersIcon, Video, HomeIcon, BellIcon } from "lucide-react";
+import { UsersIcon, Video, HomeIcon, BellIcon, Users } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import LazyImage from "./LazyImage";
 
@@ -31,6 +31,16 @@ const Sidebar = () => {
           >
             <HomeIcon className="size-5 text-base-content opacity-70" />
             <span>Home</span>
+          </Link>
+
+          <Link
+            to="/groups"
+            className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
+              currentPath === "/groups" || currentPath.startsWith("/group-") ? "btn-active" : ""
+            }`}
+          >
+            <Users className="size-5 text-base-content opacity-70" />
+            <span>Groups</span>
           </Link>
 
           <Link
@@ -76,22 +86,34 @@ const Sidebar = () => {
             <span className="text-xs mt-1">Home</span>
           </Link>
           <Link
+            to="/groups"
+            className={`flex flex-col items-center justify-center flex-1 h-full ${
+              currentPath === "/groups" || currentPath.startsWith("/group-") ? "text-primary" : "text-base-content opacity-70"
+            }`}
+          >
+            <Users className="size-5" />
+            <span className="text-xs mt-1">Groups</span>
+          </Link>
+          <Link
             to="/notifications"
             className={`flex flex-col items-center justify-center flex-1 h-full ${
               currentPath === "/notifications" ? "text-primary" : "text-base-content opacity-70"
             }`}
           >
             <BellIcon className="size-5" />
-            <span className="text-xs mt-1">Notifications</span>
+            <span className="text-xs mt-1">Alerts</span>
           </Link>
-          <div className="flex flex-col items-center justify-center flex-1 h-full">
+          <Link
+            to="/profile"
+            className="flex flex-col items-center justify-center flex-1 h-full"
+          >
             <div className="avatar">
-              <div className="w-8 rounded-full">
+              <div className="w-7 rounded-full">
                 <LazyImage src={authUser?.profilePic} alt="Profile" className="w-full h-full object-cover rounded-full" />
               </div>
             </div>
-            <span className="text-xs mt-1 truncate max-w-[60px]">{authUser?.fullName?.split(' ')[0]}</span>
-          </div>
+            <span className="text-xs mt-1">Profile</span>
+          </Link>
         </div>
       </nav>
     </>

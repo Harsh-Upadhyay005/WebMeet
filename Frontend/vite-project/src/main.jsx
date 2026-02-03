@@ -11,7 +11,22 @@ import {
 
 import { BrowserRouter } from 'react-router-dom'
 
-const queryClient = new QueryClient()
+// Configure QueryClient with optimized defaults
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
+      retry: 1,
+      retryDelay: 1000,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+    },
+    mutations: {
+      retry: 1,
+    },
+  },
+})
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
