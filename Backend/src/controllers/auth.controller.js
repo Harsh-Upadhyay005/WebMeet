@@ -1,6 +1,16 @@
 import { upsertStreamUser } from '../lib/stream.js';
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
+
+// Cookie options helper for consistent settings
+const getCookieOptions = () => ({
+    maxAge: 5 * 24 * 60 * 60 * 1000, // 5 days
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: "/",
+});
+
 export async function signup(req, res) {
     const { fullName, email, password } = req.body;
     try {
@@ -41,12 +51,7 @@ export async function signup(req, res) {
         }
 
         const token = jwt.sign({ userid: newUser._id }, process.env.JWT_SECRET_KEY, { expiresIn: "5d" });
-        res.cookie("jwt", token, {
-            maxAge: 5 * 24 * 60 * 60 * 1000,
-            httpOnly: true, // prevent XSS attacks
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // none for cross-domain in production
-        });
+        res.cookie("jwt", token, getCookieOptions());
 
         res.status(201).json({success: true, user: newUser, token});
         
@@ -66,7 +71,7 @@ export async function login(req, res) {
         if (!email || !password) {
             return res.status(400).json({ message: "Email and Password are required" });
         }
-        const user = await User.findOne({ email: email });
+        const user = await User.findOne({ email: email }).select('+password');
         if (!user) {
             return res.status(401).json({ message: "Invalid Email or Password" });
         }
@@ -87,17 +92,17 @@ export async function login(req, res) {
         }
 
         const token = jwt.sign({ userid: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: "5d" });
-        res.cookie("jwt", token, {
-            maxAge: 5 * 24 * 60 * 60 * 1000,
-            httpOnly: true, // prevent XSS attacks
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // none for cross-domain in production
-        });
-        res.status(200).json({ success: true, user: user, token });
+        res.cookie("jwt", token, getCookieOptions());
+        
+        // Remove password from response
+        const userResponse = user.toObject();
+        delete userResponse.password;
+        
+        res.status(200).json({ success: true, user: userResponse, token });
 
     } catch (error) {
         console.error("Login Error:", error);
-        return res.status(500).json({ message: "internal Server Error" });
+        return res.status(500).json({ message: "Internal Server Error" });
     }
 }
 export async function logout(req, res) {
@@ -107,6 +112,7 @@ export async function logout(req, res) {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            path: "/",
         });
         
         res.status(200).json({ success: true, message: "Logged out successfully" });
