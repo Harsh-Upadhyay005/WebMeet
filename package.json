@@ -18,5 +18,13 @@
   "bugs": {
     "url": "https://github.com/Harsh-Upadhyay005/WebMeet/issues"
   },
-  "homepage": "https://github.com/Harsh-Upadhyay005/WebMeet#readme"
+  "homepage": "https://github.com/Harsh-Upadhyay005/WebMeet#readme",
+  "dependencies": {
+    "compression": "^1.8.1",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.1",
+    "winston": "^3.19.0",
+    "xss-clean": "^0.1.4"
+  }
 }
