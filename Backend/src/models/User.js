@@ -5,16 +5,20 @@ const userSchema = new mongoose.Schema({
     fullName: {
         type: String,
         required: true,
+        index: true, // Index for faster name searches
     },
     email: {
         type: String,
         required: true,
         unique: true,
+        lowercase: true,
+        trim: true,
     },
     password: {
         type: String,
         required: true,
         minlength: 6,
+        select: false, // Don't include password by default in queries
     },
     bio: {
         type: String,
@@ -27,6 +31,7 @@ const userSchema = new mongoose.Schema({
     nativeLanguage: {
         type: String,
         default: "",
+        index: true, // Index for language-based queries
     },
     learningLanguage: {
         type: String,
@@ -39,12 +44,16 @@ const userSchema = new mongoose.Schema({
     isOnboarded: {
         type: Boolean,
         default: false,
+        index: true, // Index for filtering onboarded users
     },
     friends: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     }],
 }, { timestamps: true }); 
+
+// Compound index for common queries
+userSchema.index({ isOnboarded: 1, createdAt: -1 });
 
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) {
