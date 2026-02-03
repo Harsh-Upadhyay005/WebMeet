@@ -38,23 +38,35 @@ const ChatPage = () => {
 
   useEffect(() => {
     const initChat = async () => {
-      if (!tokenData?.token || !authUser) return;
+      if (!tokenData?.token || !authUser) {
+        setLoading(false);
+        return;
+      }
 
       try {
         console.log("Initializing stream chat client...");
+        console.log("Token data:", tokenData);
+        console.log("Auth user:", authUser);
+        console.log("Stream API Key:", STREAM_API_KEY);
 
         const client = StreamChat.getInstance(STREAM_API_KEY);
+
+        // Only use image URL if it's not a base64 string (Stream has 5KB limit)
+        const userImage = authUser.profilePic && !authUser.profilePic.startsWith('data:') 
+          ? authUser.profilePic 
+          : undefined;
 
         await client.connectUser(
           {
             id: authUser._id,
             name: authUser.fullName,
-            image: authUser.profilePic,
+            image: userImage,
           },
           tokenData.token
         );
 
-        //
+        console.log("User connected to Stream");
+
         const channelId = [authUser._id, targetUserId].sort().join("-");
 
         // I AND MY FRIEND SHOULD HAVE SAME CHANNEL ID
@@ -67,17 +79,30 @@ const ChatPage = () => {
 
         await currChannel.watch();
 
+        console.log("Channel created and watching");
+
         setChatClient(client);
         setChannel(currChannel);
+        setLoading(false);
       } catch (error) {
         console.error("Error initializing chat:", error);
+        console.error("Error details:", error.message, error.response);
         toast.error("Could not connect to chat. Please try again.");
-      } finally {
         setLoading(false);
       }
     };
 
     initChat();
+
+    return () => {
+      if (chatClient) {
+        chatClient.disconnectUser().then(() => {
+          console.log("User disconnected from Stream");
+        }).catch((err) => {
+          console.error("Error disconnecting:", err);
+        });
+      }
+    };
   }, [tokenData, authUser, targetUserId]);
 
   const handleVideoCall = () => {
