@@ -33,7 +33,7 @@ export async function signup(req, res) {
             await upsertStreamUser({
             id: newUser._id.toString(),
             name: newUser.fullName,
-            profilePic: newUser.profilePic || "",
+            image: newUser.profilePic || "",
         });
         }
         catch (error) {
@@ -74,6 +74,18 @@ export async function login(req, res) {
         if (!isPasswordMatch) {
             return res.status(401).json({ message: "Invalid Email or Password" });
         }
+
+        // Upsert Stream user on login to ensure they exist in Stream
+        try {
+            await upsertStreamUser({
+                id: user._id.toString(),
+                name: user.fullName,
+                image: user.profilePic || "",
+            });
+        } catch (streamError) {
+            console.error("Error upserting Stream user on login:", streamError.message);
+        }
+
         const token = jwt.sign({ userid: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: "5d" });
         res.cookie("jwt", token, {
             maxAge: 5 * 24 * 60 * 60 * 1000,
@@ -135,9 +147,8 @@ export async function onboard(req, res) {
             await upsertStreamUser({
             id: updatedUser._id.toString(),
             name: updatedUser.fullName,
-            profilePic: updatedUser.profilePic || "",
+            image: updatedUser.profilePic || "",
         });
-        console.log(`Stream user upserted after onboarding: ${updatedUser.fullName}`);
         }
         catch (streamError) {
             console.error("Error upserting Stream user:", streamError.message);
@@ -187,7 +198,7 @@ export async function updateProfile(req, res) {
             await upsertStreamUser({
                 id: updatedUser._id.toString(),
                 name: updatedUser.fullName,
-                profilePic: updatedUser.profilePic || "",
+                image: updatedUser.profilePic || "",
             });
         } catch (streamError) {
             console.error("Error upserting Stream user:", streamError.message);

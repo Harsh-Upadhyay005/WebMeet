@@ -14,6 +14,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 const __dirname = path.resolve();
+const isProduction = process.env.NODE_ENV === 'production';
 
 // CORS Configuration for production and development
 const allowedOrigins = [
@@ -33,22 +34,44 @@ app.use(cors({
         if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
             callback(null, true);
         } else {
-            console.log('CORS blocked origin:', origin);
+            if (!isProduction) {
+                console.log('CORS blocked origin:', origin);
+            }
             callback(new Error('Not allowed by CORS'));
         }
     },
     credentials: true,
 }));
-app.use(express.json());
+
+// Body parser with size limit to prevent payload attacks
+app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 
+// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
-app.use("/api/chat", chatRoutes); // Use chatRoutes for chat-related endpoints
+app.use("/api/chat", chatRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK', message: 'Server is running' });
+});
+
+// Global error handler (must be after routes)
+app.use((err, req, res, next) => {
+    console.error('Server error:', err);
+    
+    // Don't expose error details in production
+    if (isProduction) {
+        res.status(err.status || 500).json({ 
+            message: 'Internal server error' 
+        });
+    } else {
+        res.status(err.status || 500).json({ 
+            message: err.message,
+            stack: err.stack 
+        });
+    }
 });
 
 app.listen (PORT, () => {
