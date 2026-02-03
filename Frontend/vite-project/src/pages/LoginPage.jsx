@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Video } from 'lucide-react'
+import { Video, Loader2 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { axiosInstance } from '../lib/axios'
+import { login } from '../lib/api'
 import toast from 'react-hot-toast'
 
 const LoginPage = () => {
@@ -15,27 +15,25 @@ const LoginPage = () => {
   const navigate = useNavigate()
 
   const loginMutation = useMutation({
-    mutationFn: async (data) => {
-      const response = await axiosInstance.post('/api/auth/login', data)
-      return response.data
-    },
+    mutationFn: login,
     onSuccess: (data) => {
       toast.success('Login successful!')
-      // Store token in localStorage
-      if (data.token) {
-        localStorage.setItem('authToken', data.token)
-      }
       // Set the authUser query data directly
       queryClient.setQueryData(['authUser'], data)
+      // Invalidate to refetch fresh data
+      queryClient.invalidateQueries({ queryKey: ['authUser'] })
       // Navigate based on onboarding status
-      if (data.user?.isOnboarded) {
-        navigate('/')
-      } else {
-        navigate('/onboarding')
-      }
+      setTimeout(() => {
+        if (data.user?.isOnboarded) {
+          navigate('/')
+        } else {
+          navigate('/onboarding')
+        }
+      }, 100);
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Login failed')
+      console.error('Login error:', error);
+      toast.error(error.response?.data?.message || 'Login failed. Please try again.')
     }
   })
 
