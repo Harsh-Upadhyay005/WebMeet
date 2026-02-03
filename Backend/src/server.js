@@ -75,7 +75,9 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 
-// Routes
+// Routes with rate limiting
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/signup', authLimiter);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
 app.use("/api/chat", chatRoutes);
