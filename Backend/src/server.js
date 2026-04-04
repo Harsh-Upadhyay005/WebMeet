@@ -16,7 +16,7 @@ import cookieParser from 'cookie-parser';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = Number.parseInt(process.env.PORT || '3000', 10) || 3000;
 const __dirname = path.resolve();
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -120,8 +120,17 @@ app.use((err, req, res, next) => {
     }
 });
 
-app.listen (PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     connetdb();
+});
 
+server.on('error', (error) => {
+    if (error.code === 'EADDRINUSE') {
+        console.error(`Port ${PORT} is already in use. Stop the existing process or change PORT in your .env file.`);
+        process.exit(1);
+    }
+
+    console.error('Failed to start server:', error.message);
+    process.exit(1);
 });
