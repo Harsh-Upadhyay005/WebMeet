@@ -8,6 +8,7 @@ import { completeOnboarding } from '../lib/api.js';
 import { Camera, CameraIcon, ShuffleIcon } from 'lucide-react';
 import { LANGUAGES } from '../constants/index.js';
 import LazyImage from '../components/LazyImage';
+import { getOptimizedImageDataUrl } from '../lib/image.js';
 
 
 const OnboardingPage = () => {
@@ -57,6 +58,23 @@ const OnboardingPage = () => {
   };
  }
 
+   const handleProfilePictureUpload = async (event) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      const optimizedProfilePic = await getOptimizedImageDataUrl(file);
+      setFormState((prev) => ({ ...prev, profilePic: optimizedProfilePic }));
+    } catch {
+      toast.error('Failed to process image, please try again');
+    } finally {
+      event.target.value = '';
+    }
+   };
+
   return (
     <div className='min-h-screen bg-base-100 flex items-center justify-center p-4'>
       <div className='card bg-base-200 w-full max-w-3xl shadow-xl'>
@@ -99,16 +117,7 @@ const OnboardingPage = () => {
                     type="file"
                     accept="image/*"
                     className='hidden'
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (file) {
-                        const reader = new FileReader();
-                        reader.onloadend = () => {
-                          setFormState((prev) => ({...prev, profilePic: reader.result}));
-                        };
-                        reader.readAsDataURL(file);
-                      }
-                    }}
+                      onChange={handleProfilePictureUpload}
                   />
                 </label>
               </div>

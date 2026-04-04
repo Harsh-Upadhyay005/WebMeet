@@ -7,6 +7,7 @@ import { updateProfile } from '../lib/api';
 import { Camera, ShuffleIcon, ArrowLeft, Save } from 'lucide-react';
 import { LANGUAGES } from '../constants/index.js';
 import LazyImage from '../components/LazyImage';
+import { getOptimizedImageDataUrl } from '../lib/image.js';
 
 const ProfilePage = () => {
   const { authUser } = useAuthUser();
@@ -49,12 +50,29 @@ const ProfilePage = () => {
     const img = new Image();
     img.src = randomAvatar;
     img.onload = () => {
-      setFormState({ ...formState, profilePic: randomAvatar });
+      setFormState((prev) => ({ ...prev, profilePic: randomAvatar }));
       toast.success('Random avatar generated');
     };
     img.onerror = () => {
       toast.error('Failed to load avatar, please try again');
     };
+  };
+
+  const handleProfilePictureUpload = async (event) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      const optimizedProfilePic = await getOptimizedImageDataUrl(file);
+      setFormState((prev) => ({ ...prev, profilePic: optimizedProfilePic }));
+    } catch {
+      toast.error('Failed to process image, please try again');
+    } finally {
+      event.target.value = '';
+    }
   };
 
   return (
@@ -104,16 +122,7 @@ const ProfilePage = () => {
                       type="file"
                       accept="image/*"
                       className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files[0];
-                        if (file) {
-                          const reader = new FileReader();
-                          reader.onloadend = () => {
-                            setFormState((prev) => ({ ...prev, profilePic: reader.result }));
-                          };
-                          reader.readAsDataURL(file);
-                        }
-                      }}
+                      onChange={handleProfilePictureUpload}
                     />
                   </label>
                 </div>
