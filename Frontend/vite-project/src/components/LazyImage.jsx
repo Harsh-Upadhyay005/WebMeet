@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Camera } from 'lucide-react';
 
 const LazyImage = ({ 
@@ -6,85 +6,67 @@ const LazyImage = ({
   alt, 
   className = '', 
   placeholderClassName = '',
+  loading = 'lazy',
+  decoding = 'async',
   onLoad,
   onError,
   fallbackSrc = null
 }) => {
-  const [loadedSrc, setLoadedSrc] = useState(null);
-  const [error, setError] = useState(false);
+  // Automatically trigger loading if there's a src, skip unnecessary delay hooks
+  const initialSrc = src || fallbackSrc || '';
+  const [currentSrc, setCurrentSrc] = useState(initialSrc);
+  const [status, setStatus] = useState(initialSrc ? 'loading' : 'idle');
 
-  useEffect(() => {
-    if (!src) {
-      return;
-    }
-
-    let isMounted = true;
-
-    // Preload the image
-    const img = new Image();
-    img.src = src;
-
-    img.onload = () => {
-      if (isMounted) {
-        setLoadedSrc(src);
-        setError(false);
-        onLoad?.();
-      }
-    };
-
-    img.onerror = () => {
-      if (isMounted) {
-        if (fallbackSrc) {
-          setLoadedSrc(fallbackSrc);
-          setError(false);
-        } else {
-          setLoadedSrc(null);
-          setError(true);
-        }
-        onError?.();
-      }
-    };
-
-    return () => {
-      isMounted = false;
-      img.onload = null;
-      img.onerror = null;
-    };
-  }, [src, fallbackSrc, onLoad, onError]);
-
-  // Show loading spinner while image is being loaded
-  const isLoading = src && !loadedSrc && !error;
-  
-  if (isLoading) {
-    return (
-      <div className={`flex items-center justify-center ${placeholderClassName || className}`}>
-        <span className="loading loading-spinner loading-md text-primary"></span>
-      </div>
-    );
+  // If the parent changes `src` quickly (e.g. searching), ensure we update
+  if (src && currentSrc !== src && currentSrc !== fallbackSrc) {
+    setCurrentSrc(src);
+    setStatus('loading');
   }
 
-  // Show error state
-  if (error) {
+  if (!initialSrc) {
+    return null;
+  }
+
+  const isLoading = status === 'loading';
+
+  if (status === 'error') {
     return (
-      <div className={`flex items-center justify-center ${placeholderClassName || className}`}>
+      <div className={`flex items-center justify-center bg-base-200 ${placeholderClassName || className}`}>
         <Camera className="size-8 text-base-content opacity-40" />
       </div>
     );
   }
 
-  // Show image
-  if (loadedSrc) {
-    return (
+  return (
+    <div className={`relative overflow-hidden ${placeholderClassName || className}`}>
+      {/* Hide the spinner for small avatars if we want to, but keep it for normal images */}
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-base-200/50">
+          <span className="loading loading-spinner text-primary w-4 h-4 sm:w-6 sm:h-6"></span>
+        </div>
+      )}
       <img
-        src={loadedSrc}
+        src={currentSrc}
         alt={alt}
-        className={className}
+        loading={loading}
+        decoding={decoding}
+        onLoad={(event) => {
+          setStatus('loaded');
+          onLoad?.(event);
+        }}
+        onError={(event) => {
+          if (fallbackSrc && currentSrc !== fallbackSrc) {
+            setCurrentSrc(fallbackSrc);
+            setStatus('loading');
+            return;
+          }
+          setStatus('error');
+          onError?.(event);
+        }}
+        className={`${className} ${status === 'loaded' ? 'opacity-100' : 'opacity-0'} transition-opacity duration-200`}
       />
-    );
-  }
-
-  // No src provided
-  return null;
+    </div>
+  );
 };
 
 export default LazyImage;

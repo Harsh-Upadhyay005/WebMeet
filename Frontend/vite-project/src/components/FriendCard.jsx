@@ -1,37 +1,45 @@
 import { Link } from "react-router-dom";
-import { getLanguageFlag } from "../lib/utils.jsx";
+import { capitalize, getLanguageFlag } from "../lib/utils.jsx";
 import { MessageCircle, Video } from "lucide-react";
 import LazyImage from "./LazyImage";
 
 const FriendCard = ({ friend }) => {
   return (
-    <div className="card bg-base-200 hover:shadow-md transition-shadow">
-      <div className="card-body p-3 sm:p-4">
+    <div className="card bg-base-100 border border-base-200 hover:border-primary/30 hover:shadow-xl transition-all duration-300 group h-full">
+      <div className="card-body p-4 sm:p-5 flex flex-col justify-between">
+        
         {/* USER INFO */}
-        <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-          <div className="avatar w-10 h-10 sm:w-12 sm:h-12 rounded-full">
-            <LazyImage src={friend.profilePic} alt={friend.fullName} className="w-full h-full object-cover rounded-full" />
+        <div>
+          <div className="flex items-center gap-3 sm:gap-4 mb-4">
+            <div className="avatar size-12 sm:size-14 shrink-0 ring-2 ring-transparent group-hover:ring-primary/30 transition-all duration-300 rounded-full">
+              <LazyImage src={friend.profilePic} alt={friend.fullName} className="w-full h-full object-cover rounded-full" loading="eager" />
+            </div>
+            <div className="min-w-0">
+              <h3 className="font-semibold text-base sm:text-lg truncate" title={friend.fullName}>{friend.fullName}</h3>
+              {friend.location && (
+                <div className="text-xs opacity-70 mt-0.5 truncate" title={friend.location}>
+                  {friend.location}
+                </div>
+              )}
+            </div>
           </div>
-          <h3 className="font-semibold truncate text-sm sm:text-base">{friend.fullName}</h3>
+
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            <span className="badge badge-secondary/80 badge-sm sm:badge-md">
+              {getLanguageFlag(friend.nativeLanguage)}
+              Native: {capitalize(friend.nativeLanguage || "")}
+            </span>
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-1 sm:gap-1.5 mb-2 sm:mb-3">
-          <span className="badge badge-secondary text-[10px] sm:text-xs">
-            {getLanguageFlag(friend.nativeLanguage)}
-            Native: {friend.nativeLanguage}
-          </span>
-        </div>
-
-        <div className="flex gap-2">
-          <Link to={`/chat/${friend._id}`} className="btn btn-primary btn-sm flex-1">
-            <MessageCircle className="w-4 h-4" />
-            <span className="hidden xs:inline">Message</span> /
-            <Video className="w-4 h-4" />
+        {/* ACTIONS */}
+        <div className="flex gap-2 w-full mt-auto">
+          <Link to={`/chat/${friend._id}`} className="btn btn-primary btn-sm flex-1 shadow-sm group-hover:-translate-y-0.5 transition-transform">
+            <MessageCircle className="size-4" />
+            <span>Chat</span> 
+            <span className="opacity-50">/</span>
+            <Video className="size-4" />
           </Link>
-          {/* <Link to={`/call/${friend._id}`} className="btn btn-secondary btn-sm flex-1">
-            <Video className="w-4 h-4" />
-            <span className="hidden xs:inline">Call</span>
-          </Link> */}
         </div>
       </div>
     </div>
