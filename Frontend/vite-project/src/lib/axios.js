@@ -32,8 +32,10 @@ axiosInstance.interceptors.response.use(
     // Handle 401 errors (unauthorized)
     if (error.response?.status === 401) {
       localStorage.removeItem('authToken');
-      // Only redirect if not already on login page
-      if (!window.location.pathname.includes('/login')) {
+      
+      // Do not redirect if already on login, signup, or landing page
+      const publicRoutes = ['/login', '/signup', '/'];
+      if (!publicRoutes.includes(window.location.pathname)) {
         window.location.href = '/login';
       }
     }
