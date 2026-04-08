@@ -122,19 +122,17 @@ const SignUpPage = () => {
                 <label className='label mb-1 block'>
                   <span className='text-sm font-semibold text-base-content/80 tracking-wide'>Full Name</span>
                 </label>
-                <div className="relative text-base-content/50 focus-within:text-primary">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors">
-                    <User className="h-5 w-5" />
-                  </div>
+                <label className="input input-bordered flex items-center gap-3 bg-base-200/50 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all shadow-sm h-14 text-base-content/50 focus-within:text-primary overflow-hidden">
+                  <User className="h-5 w-5 shrink-0" />
                   <input
                     type="text"
                     value={signupData.fullName}
                     onChange={(e) => setSignupData({ ...signupData, fullName: e.target.value })}
-                    className="input input-bordered w-full pl-12 py-6 bg-base-200/50 focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm"
+                    className="grow text-base-content border-none focus:outline-none bg-transparent"
                     placeholder="John Doe"
                     required
                   />
-                </div>
+                </label>
               </motion.div>
 
               {/* email input */}
@@ -142,19 +140,17 @@ const SignUpPage = () => {
                 <label className='label mb-1 block'>
                   <span className='text-sm font-semibold text-base-content/80 tracking-wide'>Email Address</span>
                 </label>
-                <div className="relative text-base-content/50 focus-within:text-primary">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors">
-                    <Mail className="h-5 w-5" />
-                  </div>
+                <label className="input input-bordered flex items-center gap-3 bg-base-200/50 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all shadow-sm h-14 text-base-content/50 focus-within:text-primary overflow-hidden">
+                  <Mail className="h-5 w-5 shrink-0" />
                   <input
                     type="email"
                     value={signupData.email}
                     onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
-                    className="input input-bordered w-full pl-12 py-6 bg-base-200/50 focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm"
+                    className="grow text-base-content border-none focus:outline-none bg-transparent"
                     placeholder="you@example.com"
                     required
                   />
-                </div>
+                </label>
               </motion.div>
 
               {/* password input */}
@@ -162,19 +158,17 @@ const SignUpPage = () => {
                 <label className='label mb-1 block'>
                   <span className='text-sm font-semibold text-base-content/80 tracking-wide'>Password</span>
                 </label>
-                <div className="relative text-base-content/50 focus-within:text-primary">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors">
-                    <Lock className="h-5 w-5" />
-                  </div>
+                <label className="input input-bordered flex items-center gap-3 bg-base-200/50 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all shadow-sm h-14 text-base-content/50 focus-within:text-primary overflow-hidden">
+                  <Lock className="h-5 w-5 shrink-0" />
                   <input
                     type="password"
                     value={signupData.password}
                     onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
-                    className="input input-bordered w-full pl-12 py-6 bg-base-200/50 focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm"
+                    className="grow text-base-content border-none focus:outline-none bg-transparent"
                     placeholder="••••••••"
                     required
                   />
-                </div>
+                </label>
                 <p className='text-xs text-base-content/50 mt-2 font-medium flex items-center gap-1'>
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
                   Must be at least 6 characters long

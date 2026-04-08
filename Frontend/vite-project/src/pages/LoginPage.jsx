@@ -94,19 +94,17 @@ const LoginPage = () => {
                 <label className='label mb-1 block'>
                   <span className='text-sm font-medium text-base-content/80'>Email Address</span>
                 </label>
-                <div className="relative text-base-content/50 focus-within:text-primary">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors">
-                    <Mail className="h-5 w-5" />
-                  </div>
+                <label className="input input-bordered flex items-center gap-3 bg-base-200/50 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all shadow-sm h-14 text-base-content/50 focus-within:text-primary overflow-hidden">
+                  <Mail className="h-5 w-5 shrink-0" />
                   <input
                     type="email"
                     value={loginData.email}
                     onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                    className="input input-bordered w-full pl-12 py-6 bg-base-200/50 focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm"
+                    className="grow text-base-content border-none focus:outline-none bg-transparent"
                     placeholder="you@example.com"
                     required
                   />
-                </div>
+                </label>
               </motion.div>
 
               {/* password input */}
@@ -114,19 +112,17 @@ const LoginPage = () => {
                 <label className='label mb-1 block flex justify-between'>
                   <span className='text-sm font-medium text-base-content/80'>Password</span>
                 </label>
-                <div className="relative text-base-content/50 focus-within:text-primary">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors">
-                    <Lock className="h-5 w-5" />
-                  </div>
+                <label className="input input-bordered flex items-center gap-3 bg-base-200/50 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all shadow-sm h-14 text-base-content/50 focus-within:text-primary overflow-hidden">
+                  <Lock className="h-5 w-5 shrink-0" />
                   <input
                     type="password"
                     value={loginData.password}
                     onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                    className="input input-bordered w-full pl-12 py-6 bg-base-200/50 focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm"
+                    className="grow text-base-content border-none focus:outline-none bg-transparent"
                     placeholder="••••••••"
                     required
                   />
-                </div>
+                </label>
               </motion.div>
 
               <motion.div variants={itemVariants} className="pt-4">
