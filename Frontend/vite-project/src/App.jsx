@@ -19,6 +19,8 @@ import useAuthUser from "./hooks/useAuthUser.js";
 import Layout from "./components/Layout.jsx";
 import { useThemeStore } from "./store/useThemeStore.js";
 
+import LandingPage from "./pages/LandingPage.jsx";
+
 const App = () => {
   const { isLoading, authUser } = useAuthUser();
   const { theme } = useThemeStore();
@@ -39,7 +41,7 @@ const App = () => {
                 <HomePage />
               </Layout>
             ) : (
-              <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+              <LandingPage />
             )
           }
         />
