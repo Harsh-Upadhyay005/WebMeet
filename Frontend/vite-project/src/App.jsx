@@ -11,6 +11,7 @@ import ProfilePage from "./pages/ProfilePage.jsx";
 import GroupsPage from "./pages/GroupsPage.jsx";
 import GroupChatPage from "./pages/GroupChatPage.jsx";
 import GroupCallPage from "./pages/GroupCallPage.jsx";
+import LandingPage from "./pages/LandingPage.jsx";
 
 import { Toaster } from "react-hot-toast";
 
@@ -19,7 +20,6 @@ import useAuthUser from "./hooks/useAuthUser.js";
 import Layout from "./components/Layout.jsx";
 import { useThemeStore } from "./store/useThemeStore.js";
 
-import LandingPage from "./pages/LandingPage.jsx";
 
 const App = () => {
   const { isLoading, authUser } = useAuthUser();
@@ -33,6 +33,12 @@ const App = () => {
   return (
     <div className="h-screen" data-theme={theme}>
       <Routes>
+        {/* Landing Page - Public */}
+        <Route
+          path="/landing"
+          element={<LandingPage />}
+        />
+        
         <Route
           path="/"
           element={
@@ -41,7 +47,7 @@ const App = () => {
                 <HomePage />
               </Layout>
             ) : (
-              <LandingPage />
+              <Navigate to={!isAuthenticated ? "/landing" : "/onboarding"} />
             )
           }
         />
