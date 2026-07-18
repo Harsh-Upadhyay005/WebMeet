@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.route.js';
 import userRoutes from './routes/user.route.js';
 import chatRoutes from './routes/chat.route.js';
 import groupRoutes from './routes/group.route.js';
+import roomRoutes from './routes/room.route.js';
 import path from 'path';
 
 import {connetdb} from "./lib/db.js";
@@ -97,6 +98,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
 app.use("/api/chat", chatRoutes);
 app.use("/api/groups", groupRoutes);
+app.use("/api/rooms", roomRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
