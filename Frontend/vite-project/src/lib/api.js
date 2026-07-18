@@ -108,3 +108,56 @@ export async function leaveGroup(groupId, userId) {
       const response = await axiosInstance.delete(`/api/groups/${groupId}/members/${userId}`);
       return response.data;
     }
+
+// ============= ROOM API FUNCTIONS =============
+
+export async function createRoom(roomData) {
+  const response = await axiosInstance.post('/api/rooms/create', roomData);
+  return response.data;
+}
+
+export async function getPublicRooms(meetingType = null) {
+  const params = meetingType ? { meetingType } : {};
+  const response = await axiosInstance.get('/api/rooms/public', { params });
+  return response.data;
+}
+
+export async function getRoomById(roomId) {
+  const response = await axiosInstance.get(`/api/rooms/${roomId}`);
+  return response.data;
+}
+
+export async function joinRoom(roomId, password = null) {
+  const response = await axiosInstance.post(`/api/rooms/${roomId}/join`, { password });
+  return response.data;
+}
+
+export async function joinByRoomCode(roomCode, password = null) {
+  const response = await axiosInstance.post(`/api/rooms/join-by-code/${roomCode}`, { password });
+  return response.data;
+}
+
+export async function admitFromWaitingRoom(roomId, userId) {
+  const response = await axiosInstance.post(`/api/rooms/${roomId}/admit`, { userId });
+  return response.data;
+}
+
+export async function leaveRoom(roomId) {
+  const response = await axiosInstance.post(`/api/rooms/${roomId}/leave`);
+  return response.data;
+}
+
+export async function deleteRoom(roomId) {
+  const response = await axiosInstance.delete(`/api/rooms/${roomId}`);
+  return response.data;
+}
+
+export async function getMyRooms() {
+  const response = await axiosInstance.get('/api/rooms/my-rooms');
+  return response.data;
+}
+
+export async function createDirectCallLink(callData) {
+  const response = await axiosInstance.post('/api/rooms/direct-call/create', callData);
+  return response.data;
+}
