@@ -12,6 +12,9 @@ import GroupsPage from "./pages/GroupsPage.jsx";
 import GroupChatPage from "./pages/GroupChatPage.jsx";
 import GroupCallPage from "./pages/GroupCallPage.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
+import PublicRoomsPage from "./pages/PublicRoomsPage.jsx";
+import DirectCallPage from "./pages/DirectCallPage.jsx";
+import RoomCallPage from "./pages/RoomCallPage.jsx";
 
 import { Toaster } from "react-hot-toast";
 
@@ -161,6 +164,46 @@ const App = () => {
               <GroupCallPage />
             ) : (
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+            )
+          }
+        />
+
+        {/* Public Rooms Routes */}
+        <Route
+          path="/public-rooms"
+          element={
+            isAuthenticated && isOnboarded ? (
+              <Layout showSidebar={true}>
+                <PublicRoomsPage />
+              </Layout>
+            ) : (
+              <Navigate to={!isAuthenticated ? "/landing" : "/onboarding"} />
+            )
+          }
+        />
+
+        {/* Direct Call Link Generator */}
+        <Route
+          path="/direct-call"
+          element={
+            isAuthenticated && isOnboarded ? (
+              <Layout showSidebar={true}>
+                <DirectCallPage />
+              </Layout>
+            ) : (
+              <Navigate to={!isAuthenticated ? "/landing" : "/onboarding"} />
+            )
+          }
+        />
+
+        {/* Room Call Page - For both public rooms and direct calls */}
+        <Route
+          path="/room/:roomId"
+          element={
+            isAuthenticated && isOnboarded ? (
+              <RoomCallPage />
+            ) : (
+              <Navigate to={!isAuthenticated ? "/landing" : "/onboarding"} />
             )
           }
         />
