@@ -1,6 +1,6 @@
 import React from "react";
 import useAuthUser from "../hooks/useAuthUser";
-import { UsersIcon, Video, HomeIcon, BellIcon, Users } from "lucide-react";
+import { UsersIcon, Video, HomeIcon, BellIcon, Users, Globe, Link2 } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import LazyImage from "./LazyImage";
 
@@ -41,6 +41,26 @@ const Sidebar = () => {
           >
             <Users className="size-5 text-base-content opacity-70" />
             <span>Groups</span>
+          </Link>
+
+          <Link
+            to="/public-rooms"
+            className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
+              currentPath === "/public-rooms" || currentPath.startsWith("/room/") ? "btn-active" : ""
+            }`}
+          >
+            <Globe className="size-5 text-base-content opacity-70" />
+            <span>Public Rooms</span>
+          </Link>
+
+          <Link
+            to="/direct-call"
+            className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
+              currentPath === "/direct-call" ? "btn-active" : ""
+            }`}
+          >
+            <Link2 className="size-5 text-base-content opacity-70" />
+            <span>Direct Call</span>
           </Link>
 
           <Link
@@ -93,6 +113,15 @@ const Sidebar = () => {
           >
             <Users className="size-5" />
             <span className="text-xs mt-1">Groups</span>
+          </Link>
+          <Link
+            to="/public-rooms"
+            className={`flex flex-col items-center justify-center flex-1 h-full ${
+              currentPath === "/public-rooms" ? "text-primary" : "text-base-content opacity-70"
+            }`}
+          >
+            <Globe className="size-5" />
+            <span className="text-xs mt-1">Rooms</span>
           </Link>
           <Link
             to="/notifications"
