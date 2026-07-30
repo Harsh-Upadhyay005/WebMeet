@@ -21,6 +21,11 @@ const PORT = Number.parseInt(process.env.PORT || '3000', 10) || 3000;
 const __dirname = path.resolve();
 const isProduction = process.env.NODE_ENV === 'production';
 
+if (isProduction) {
+    // Ensure rate limiting sees the real client IP when deployed behind a proxy.
+    app.set('trust proxy', 1);
+}
+
 // CORS Configuration - MUST be before other middleware
 const allowedOrigins = [
     'http://localhost:5173',
@@ -76,24 +81,13 @@ const limiter = rateLimit({
     skip: (req) => req.path === '/health' || req.method === 'OPTIONS',
 });
 
-// Stricter rate limiting for auth routes
-const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 20, // increased to 20 for better UX
-    message: 'Too many login attempts, please try again later.',
-    standardHeaders: true,
-    legacyHeaders: false,
-});
-
 app.use('/api', limiter);
 
 // Body parser with size limit to prevent payload attacks
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 
-// Routes with rate limiting
-app.use('/api/auth/login', authLimiter);
-app.use('/api/auth/signup', authLimiter);
+// Routes with rate limiting are applied at the route level for sensitive actions
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
 app.use("/api/chat", chatRoutes);
