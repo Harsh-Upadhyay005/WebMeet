@@ -1,5 +1,6 @@
 import express from 'express';
 import { protectRoute } from '../middleware/auth.middleware.js';
+import { friendActionLimiter } from '../middleware/rateLimiters.js';
 import { 
     acceptFriendRequest,
     getFriendRequests,
@@ -20,8 +21,8 @@ router.use(protectRoute);
 router.get("/", getRecommendedUsers);
 router.get("/friends", getMyFriends);
 
-router.post("/friend-request/:id", sendFriendRequest);
-router.put("/friend-request/:id/accept", acceptFriendRequest);
+router.post("/friend-request/:id", friendActionLimiter, sendFriendRequest);
+router.put("/friend-request/:id/accept", friendActionLimiter, acceptFriendRequest);
 // router.post("/friend-request/:id/reject", rejectFriendRequest);
 
 router.get("/friend-request", getFriendRequests);
