@@ -1,5 +1,6 @@
 import express from 'express';
 import { protectRoute } from '../middleware/auth.middleware.js';
+import { groupMutationLimiter } from '../middleware/rateLimiters.js';
 import {
     createGroup,
     getMyGroups,
@@ -16,14 +17,14 @@ const router = express.Router();
 router.use(protectRoute);
 
 // Group CRUD operations
-router.post("/", createGroup);
+router.post("/", groupMutationLimiter, createGroup);
 router.get("/", getMyGroups);
 router.get("/:id", getGroupById);
-router.put("/:id", updateGroup);
-router.delete("/:id", deleteGroup);
+router.put("/:id", groupMutationLimiter, updateGroup);
+router.delete("/:id", groupMutationLimiter, deleteGroup);
 
 // Member management
-router.post("/:id/members", addMembers);
-router.delete("/:id/members/:memberId", removeMember);
+router.post("/:id/members", groupMutationLimiter, addMembers);
+router.delete("/:id/members/:memberId", groupMutationLimiter, removeMember);
 
 export default router;
