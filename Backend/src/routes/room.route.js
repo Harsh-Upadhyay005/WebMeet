@@ -1,5 +1,6 @@
 import express from 'express';
 import { protectRoute } from '../middleware/auth.middleware.js';
+import { roomCreationLimiter, roomJoinLimiter } from '../middleware/rateLimiters.js';
 import {
     createRoom,
     getPublicRooms,
@@ -19,21 +20,21 @@ const router = express.Router();
 router.use(protectRoute);
 
 // Public room routes
-router.post('/create', createRoom);
+router.post('/create', roomCreationLimiter, createRoom);
 router.get('/public', getPublicRooms);
 router.get('/my-rooms', getMyRooms);
 router.get('/:roomId', getRoomById);
-router.post('/:roomId/join', joinRoom);
+router.post('/:roomId/join', roomJoinLimiter, joinRoom);
 router.post('/:roomId/leave', leaveRoom);
-router.delete('/:roomId', deleteRoom);
+router.delete('/:roomId', roomJoinLimiter, deleteRoom);
 
 // Waiting room management
-router.post('/:roomId/admit', admitFromWaitingRoom);
+router.post('/:roomId/admit', roomJoinLimiter, admitFromWaitingRoom);
 
 // Direct call link route
-router.post('/direct-call/create', createDirectCallLink);
+router.post('/direct-call/create', roomCreationLimiter, createDirectCallLink);
 
 // Join by room code
-router.post('/join-by-code/:roomCode', joinByRoomCode);
+router.post('/join-by-code/:roomCode', roomJoinLimiter, joinByRoomCode);
 
 export default router;
