@@ -1,163 +1,192 @@
 import { Link } from "react-router-dom";
-import { Video, MessageCircle, Users, Sparkles, Shield, Zap, ArrowRight, Play } from "lucide-react";
+import { 
+  Video, 
+  MessageCircle, 
+  Users, 
+  Sparkles, 
+  Shield, 
+  Zap, 
+  ArrowRight,
+  CheckCircle2,
+  Lock,
+  Globe,
+  Radio
+} from "lucide-react";
 import { useThemeStore } from "../store/useThemeStore";
-import { useState, useEffect } from "react";
 import ThemeSelector from "../components/ThemeSelector";
-import InteractiveDemo from "../components/InteractiveDemo";
 
 const LandingPage = () => {
   const { theme } = useThemeStore();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [activeFeature, setActiveFeature] = useState(0);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveFeature((prev) => (prev + 1) % 3);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
 
   const features = [
     {
-      icon: <Video className="w-8 h-8" />,
-      title: "Crystal Clear Video",
-      description: "HD video calls with zero lag",
-      gradient: "from-purple-400 to-pink-400",
+      icon: <Video className="w-6 h-6 text-primary" />,
+      title: "Crystal Clear HD Video",
+      description: "Experience ultra-low latency WebRTC video calling with adaptive bandwidth management.",
     },
     {
-      icon: <MessageCircle className="w-8 h-8" />,
-      title: "Instant Messaging",
-      description: "Real-time chat that just works",
-      gradient: "from-pink-400 to-rose-400",
+      icon: <MessageCircle className="w-6 h-6 text-secondary" />,
+      title: "Instant Chat & Threads",
+      description: "Real-time messaging with instant delivery, media attachments, and message history.",
     },
     {
-      icon: <Users className="w-8 h-8" />,
-      title: "Team Spaces",
-      description: "Collaborate without limits",
-      gradient: "from-rose-400 to-orange-400",
+      icon: <Users className="w-6 h-6 text-accent" />,
+      title: "Group Rooms & Spaces",
+      description: "Create public or private meeting spaces for instant group collaboration.",
+    },
+    {
+      icon: <Sparkles className="w-6 h-6 text-primary" />,
+      title: "Smart AI Transcripts",
+      description: "Automated live captions and meeting summaries powered by intelligent speech AI.",
     },
   ];
 
   const stats = [
-    { value: "10K+", label: "Active Users" },
-    { value: "99.9%", label: "Uptime" },
-    { value: "12ms", label: "Latency" },
+    { value: "10K+", label: "Active Users", description: "Trusted daily for calls" },
+    { value: "99.99%", label: "Uptime SLA", description: "Reliable enterprise infrastructure" },
+    { value: "< 12ms", label: "Latency", description: "Sub-second real-time audio sync" },
   ];
 
   return (
-    <div className="min-h-screen relative overflow-hidden" data-theme={theme}>
-      {/* Animated Background */}
-      <div className="fixed inset-0 -z-10">
-        <div 
-          className="absolute w-[500px] h-[500px] rounded-full opacity-20 blur-3xl transition-all duration-1000 bg-primary/30"
-          style={{
-            left: `${mousePosition.x - 250}px`,
-            top: `${mousePosition.y - 250}px`,
-          }}
-        />
-        <div className="absolute top-20 right-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 left-20 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-      </div>
-
-      {/* Glassmorphic Navbar */}
-      <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[95%] max-w-6xl">
-        <div className="backdrop-blur-xl bg-base-100/30 border border-base-content/10 rounded-2xl px-6 py-4 shadow-2xl">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-3 group">
-              <div className="relative">
-                <div className="absolute inset-0 bg-primary rounded-lg blur opacity-50 group-hover:opacity-75 transition" />
-                <div className="relative bg-base-100 p-2 rounded-lg">
-                  <Video className="w-6 h-6 text-primary" />
-                </div>
+    <div 
+      className="min-h-screen bg-base-100 text-base-content transition-colors duration-300 font-sans" 
+      data-theme={theme}
+    >
+      {/* Simple Sticky Navbar */}
+      <header className="sticky top-0 z-50 bg-base-100/90 backdrop-blur-md border-b border-base-200 transition-colors duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-primary text-primary-content flex items-center justify-center font-bold text-lg shadow-sm">
+                <Video className="w-5 h-5" />
               </div>
-              <span className="text-xl font-bold text-primary">
+              <span className="text-xl font-bold tracking-tight text-base-content">
                 WebMeet
               </span>
             </Link>
 
+            {/* Navigation Links */}
+            <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-base-content/80">
+              <a href="#features" className="hover:text-primary transition-colors">Features</a>
+              <a href="#stats" className="hover:text-primary transition-colors">Stats</a>
+              <a href="#security" className="hover:text-primary transition-colors">Security</a>
+            </nav>
+
+            {/* Right Actions */}
             <div className="flex items-center gap-3">
               <ThemeSelector />
-              <Link to="/login" className="btn btn-ghost btn-sm rounded-full hover:bg-base-content/5">
+              <Link 
+                to="/login" 
+                className="btn btn-ghost btn-sm font-semibold text-base-content/80"
+              >
                 Sign In
               </Link>
-              <Link to="/signup" className="btn btn-sm rounded-full bg-primary border-none text-primary-content hover:bg-primary-focus hover:shadow-lg hover:scale-105 transition-all">
+              <Link 
+                to="/signup" 
+                className="btn btn-primary btn-sm font-semibold px-4"
+              >
                 Get Started
               </Link>
             </div>
           </div>
         </div>
-      </nav>
+      </header>
 
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center px-4 pt-32 pb-20">
-        <div className="max-w-6xl w-full">
-          <div className="text-center space-y-8">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-base-100/30 border border-base-content/10">
-              <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium">Powered by Stream.io</span>
-            </div>
+      <section className="pt-16 pb-20 px-4 max-w-5xl mx-auto text-center space-y-8">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-base-200 border border-base-300 text-xs font-semibold text-base-content/80">
+          <Radio className="w-3.5 h-3.5 text-primary" />
+          <span>WebMeet Video & Chat Platform</span>
+        </div>
 
-            {/* Heading */}
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight">
-              <span className="block">Communication</span>
-              <span className="block text-primary">
-                Reimagined
-              </span>
-            </h1>
+        {/* Heading */}
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-base-content leading-tight">
+          Simple, Crystal-Clear Video Calls & <span className="text-primary">Team Messaging</span>
+        </h1>
 
-            {/* Subheading */}
-            <p className="text-lg md:text-xl text-base-content/60 max-w-2xl mx-auto">
-              Minimalist design meets powerful features. Connect with anyone, anywhere, instantly.
-            </p>
+        {/* Subtitle */}
+        <p className="text-lg md:text-xl text-base-content/80 max-w-2xl mx-auto leading-relaxed">
+          Connect with your team instantly. High quality HD video calls, public & private chat rooms, and direct messaging built for seamless collaboration.
+        </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <Link 
-                to="/signup" 
-                className="group relative px-8 py-4 rounded-full font-medium text-white overflow-hidden transition-all hover:scale-105"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 transition-all" />
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 opacity-0 group-hover:opacity-100 transition-all" />
-                <span className="relative flex items-center gap-2">
-                  Start Free Trial
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+          <Link 
+            to="/signup" 
+            className="btn btn-primary btn-lg rounded-full font-semibold px-8 shadow-md"
+          >
+            <span>Get Started Free</span>
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+          <Link 
+            to="/login" 
+            className="btn btn-outline btn-lg rounded-full font-semibold px-8"
+          >
+            Sign In to Account
+          </Link>
+        </div>
+
+        {/* Subtext */}
+        <p className="text-xs text-base-content/60 font-medium pt-1">
+          No credit card required • Instant room creation
+        </p>
+
+        {/* Clean Dashboard Preview Mockup (No 3D tilt, high clarity) */}
+        <div className="pt-8">
+          <div className="bg-base-200 border border-base-300 rounded-2xl p-4 shadow-xl text-left max-w-4xl mx-auto">
+            {/* Header bar */}
+            <div className="flex items-center justify-between border-b border-base-300 pb-3 mb-4 px-2">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-error/80" />
+                <div className="w-3 h-3 rounded-full bg-warning/80" />
+                <div className="w-3 h-3 rounded-full bg-success/80" />
+                <span className="text-xs font-semibold text-base-content/70 ml-2">webmeet.app / call / room-702</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="badge badge-success badge-sm gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                  Live Call
                 </span>
-              </Link>
-              
-              <button 
-                onClick={() => setIsVideoPlaying(!isVideoPlaying)}
-                className="px-8 py-4 rounded-full font-medium backdrop-blur-xl bg-base-100/30 border border-base-content/10 hover:bg-base-100/50 transition-all flex items-center gap-2 group"
-              >
-                <Play className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                Watch Demo
-              </button>
+              </div>
             </div>
 
-            {/* Interactive Demo Preview */}
-            <div className="pt-16 relative">
-              <div className="relative max-w-4xl mx-auto">
-                {/* Interactive Demo Component */}
-                <div className="backdrop-blur-2xl bg-base-100/20 border border-base-content/10 rounded-3xl p-8 shadow-2xl transform hover:scale-[1.02] transition-all duration-500">
-                  <InteractiveDemo />
+            {/* Video grid preview */}
+            <div className="grid md:grid-cols-3 gap-4">
+              {/* Main Participant */}
+              <div className="md:col-span-2 relative aspect-video bg-base-300 rounded-xl overflow-hidden flex items-center justify-center border border-base-300">
+                <img 
+                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" 
+                  alt="Video participant" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-3 left-3 bg-base-900/80 text-white text-xs font-semibold px-3 py-1 rounded-lg backdrop-blur-sm">
+                  Alex Morgan (Host)
+                </div>
+              </div>
+
+              {/* Sidebar Participants */}
+              <div className="space-y-3 flex flex-col justify-between">
+                <div className="relative aspect-video bg-base-300 rounded-xl overflow-hidden border border-base-300">
+                  <img 
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" 
+                    alt="Participant 2" 
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute bottom-2 left-2 bg-base-900/80 text-white text-[11px] font-semibold px-2 py-0.5 rounded">
+                    Sarah Jenkins
+                  </div>
                 </div>
 
-                {/* Orbiting Elements */}
-                <div className="absolute -top-8 -left-8 w-16 h-16 rounded-2xl backdrop-blur-xl bg-purple-500/20 border border-purple-400/20 flex items-center justify-center animate-float">
-                  <MessageCircle className="w-8 h-8 text-purple-400" />
-                </div>
-                
-                <div className="absolute -bottom-8 -right-8 w-16 h-16 rounded-2xl backdrop-blur-xl bg-pink-500/20 border border-pink-400/20 flex items-center justify-center animate-float" style={{ animationDelay: '1s' }}>
-                  <Users className="w-8 h-8 text-pink-400" />
+                <div className="bg-base-100 border border-base-300 rounded-xl p-3 text-xs space-y-1.5">
+                  <div className="font-semibold text-primary flex items-center gap-1.5">
+                    <MessageCircle className="w-3.5 h-3.5" />
+                    In-Call Chat
+                  </div>
+                  <p className="text-base-content/80">
+                    <span className="font-medium text-base-content">David:</span> Ready to share presentation slides!
+                  </p>
                 </div>
               </div>
             </div>
@@ -165,58 +194,33 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Interactive Features Section */}
-      <section className="py-32 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-6xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Everything You Need
-              </span>
+      {/* Features Section */}
+      <section id="features" className="py-20 bg-base-200 border-y border-base-300 transition-colors duration-300">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="text-center space-y-3">
+            <h2 className="text-3xl font-bold tracking-tight text-base-content">
+              Everything You Need for Collaboration
             </h2>
-            <p className="text-lg text-base-content/60">Simple, powerful, beautiful</p>
+            <p className="text-base-content/70 max-w-xl mx-auto">
+              Clean design, high quality audio-video stream, and simple controls.
+            </p>
           </div>
 
-          {/* Feature Cards */}
-          <div className="grid md:grid-cols-3 gap-6">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                onMouseEnter={() => setActiveFeature(index)}
-                className={`group relative p-8 rounded-3xl backdrop-blur-xl border transition-all duration-500 cursor-pointer ${
-                  activeFeature === index
-                    ? 'bg-base-100/40 border-base-content/20 scale-105 shadow-2xl'
-                    : 'bg-base-100/20 border-base-content/10 hover:bg-base-100/30'
-                }`}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map((item, idx) => (
+              <div 
+                key={idx} 
+                className="bg-base-100 border border-base-300 rounded-2xl p-6 space-y-3 transition-colors duration-300"
               >
-                {/* Gradient Overlay */}
-                <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-                
-                <div className="relative space-y-4">
-                  <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${feature.gradient} bg-opacity-10 transition-transform duration-500 ${
-                    activeFeature === index ? 'scale-110' : ''
-                  }`}>
-                    <div className="text-transparent bg-gradient-to-br bg-clip-text" style={{
-                      backgroundImage: `linear-gradient(to bottom right, ${feature.gradient.includes('purple') ? '#a855f7' : '#ec4899'}, ${feature.gradient.includes('pink') ? '#f472b6' : '#fb923c'})`
-                    }}>
-                      {feature.icon}
-                    </div>
-                  </div>
-                  
-                  <h3 className="text-2xl font-bold">{feature.title}</h3>
-                  <p className="text-base-content/60">{feature.description}</p>
-
-                  {/* Progress Bar */}
-                  <div className="pt-4">
-                    <div className="h-1 bg-base-content/10 rounded-full overflow-hidden">
-                      <div 
-                        className={`h-full bg-gradient-to-r ${feature.gradient} transition-all duration-500 ${
-                          activeFeature === index ? 'w-full' : 'w-0'
-                        }`}
-                      />
-                    </div>
-                  </div>
+                <div className="w-12 h-12 rounded-xl bg-base-200 flex items-center justify-center mb-2">
+                  {item.icon}
                 </div>
+                <h3 className="text-lg font-bold text-base-content">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-base-content/70 leading-relaxed">
+                  {item.description}
+                </p>
               </div>
             ))}
           </div>
@@ -224,121 +228,79 @@ const LandingPage = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-32 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="backdrop-blur-2xl bg-base-100/20 border border-base-content/10 rounded-3xl p-12">
-            <div className="grid md:grid-cols-3 gap-12">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center space-y-2 group cursor-pointer">
-                  <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent group-hover:scale-110 transition-transform">
-                    {stat.value}
-                  </div>
-                  <div className="text-base-content/60">{stat.label}</div>
-                  <div className="w-16 h-1 mx-auto bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Tech Stack - Minimalist */}
-      <section className="py-32 px-4">
-        <div className="max-w-4xl mx-auto text-center space-y-12">
-          <div>
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">Built with Modern Tech</h2>
-            <p className="text-base-content/60">Powered by industry leaders</p>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-4">
-            {['React', 'Stream.io', 'Node.js', 'MongoDB', 'Zustand', 'Tailwind'].map((tech, index) => (
-              <div
-                key={index}
-                className="px-6 py-3 rounded-full backdrop-blur-xl bg-base-100/20 border border-base-content/10 hover:bg-base-100/40 hover:scale-110 transition-all cursor-pointer"
-              >
-                <span className="font-medium">{tech}</span>
+      <section id="stats" className="py-16 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid md:grid-cols-3 gap-8 text-center">
+          {stats.map((stat, idx) => (
+            <div key={idx} className="bg-base-200 border border-base-300 rounded-2xl p-8 space-y-2 transition-colors duration-300">
+              <div className="text-4xl font-extrabold text-primary">
+                {stat.value}
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Security Badge */}
-      <section className="py-32 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="backdrop-blur-2xl bg-base-100/20 border border-base-content/10 rounded-3xl p-12 text-center space-y-6">
-            <div className="inline-flex p-4 rounded-2xl bg-gradient-to-br from-green-400/20 to-emerald-400/20">
-              <Shield className="w-12 h-12 text-green-400" />
+              <div className="text-lg font-bold text-base-content">
+                {stat.label}
+              </div>
+              <div className="text-xs text-base-content/70">
+                {stat.description}
+              </div>
             </div>
-            <h3 className="text-3xl font-bold">Bank-Grade Security</h3>
-            <p className="text-base-content/60 max-w-2xl mx-auto">
-              End-to-end encryption, secure authentication, and compliance with industry standards. Your data is always protected.
-            </p>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-32 px-4">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="text-4xl md:text-6xl font-bold">
-            Ready to Start?
+      {/* Security Section */}
+      <section id="security" className="py-16 bg-base-200 border-y border-base-300 transition-colors duration-300">
+        <div className="max-w-4xl mx-auto px-4 text-center space-y-4">
+          <div className="w-12 h-12 rounded-2xl bg-success/10 text-success mx-auto flex items-center justify-center">
+            <Lock className="w-6 h-6" />
+          </div>
+          <h2 className="text-2xl font-bold text-base-content">
+            Encrypted & Secure Communication
           </h2>
-          <p className="text-xl text-base-content/60">
-            Join thousands of teams already using WebMeet
+          <p className="text-sm text-base-content/70 max-w-lg mx-auto leading-relaxed">
+            All calls are powered by secure WebRTC data channels with standard peer encryption. Your privacy and data security are always protected.
           </p>
-          
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        </div>
+      </section>
+
+      {/* Simple CTA Banner */}
+      <section className="py-20 max-w-4xl mx-auto px-4 text-center">
+        <div className="bg-base-200 border border-base-300 rounded-3xl p-10 sm:p-12 space-y-6">
+          <h2 className="text-3xl font-bold text-base-content">
+            Ready to Start Your First Call?
+          </h2>
+          <p className="text-base-content/70 max-w-md mx-auto">
+            Join WebMeet today and connect with colleagues, friends, and teams in seconds.
+          </p>
+          <div className="flex justify-center pt-2">
             <Link 
               to="/signup" 
-              className="group relative px-10 py-5 rounded-full font-medium text-white text-lg overflow-hidden transition-all hover:scale-105"
+              className="btn btn-primary btn-lg rounded-full font-semibold px-8"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500" />
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 opacity-0 group-hover:opacity-100 transition-all" />
-              <span className="relative flex items-center gap-2">
-                Get Started Free
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </span>
+              Get Started Free
             </Link>
           </div>
-
-          <p className="text-sm text-base-content/40">No credit card required • Free forever</p>
         </div>
       </section>
 
-      {/* Minimalist Footer */}
-      <footer className="py-12 px-4 border-t border-base-content/10">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-              <Video className="w-6 h-6 text-purple-400" />
-              <span className="font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                WebMeet
-              </span>
-            </div>
+      {/* Simple Footer */}
+      <footer className="py-8 bg-base-200 border-t border-base-300 text-sm text-base-content/70 transition-colors duration-300">
+        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 font-bold text-base-content">
+            <Video className="w-4 h-4 text-primary" />
+            <span>WebMeet</span>
+          </div>
 
-            <div className="flex gap-8 text-sm text-base-content/60">
-              <a href="#" className="hover:text-base-content transition">Features</a>
-              <a href="#" className="hover:text-base-content transition">Privacy</a>
-              <a href="#" className="hover:text-base-content transition">Terms</a>
-            </div>
+          <div className="flex gap-6 text-xs font-semibold">
+            <a href="#features" className="hover:text-primary transition-colors">Features</a>
+            <a href="#stats" className="hover:text-primary transition-colors">Stats</a>
+            <a href="#security" className="hover:text-primary transition-colors">Security</a>
+            <Link to="/login" className="hover:text-primary transition-colors">Sign In</Link>
+          </div>
 
-            <div className="text-sm text-base-content/40">
-              © 2026 WebMeet
-            </div>
+          <div className="text-xs text-base-content/50">
+            © {new Date().getFullYear()} WebMeet. All rights reserved.
           </div>
         </div>
       </footer>
-
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-        }
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 };
