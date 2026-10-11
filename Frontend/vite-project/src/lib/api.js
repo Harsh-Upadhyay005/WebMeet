@@ -62,6 +62,18 @@ export async function acceptFriendRequest(requestId) {
       const response = await axiosInstance.put(`/api/users/friend-request/${requestId}/accept`);
       return response.data;
     }
+export async function rejectFriendRequest(requestId) {
+      const response = await axiosInstance.delete(`/api/users/friend-request/${requestId}/reject`);
+      return response.data;
+    }
+export async function removeFriend(friendId) {
+      const response = await axiosInstance.delete(`/api/users/friends/${friendId}`);
+      return response.data;
+    }
+export async function uploadAvatar(imageDataUrl) {
+      const response = await axiosInstance.post('/api/upload/avatar', { imageDataUrl });
+      return response.data;
+    }
 export async function getStreamToken() {
       const response = await axiosInstance.get('/api/chat/token');
       return response.data;
