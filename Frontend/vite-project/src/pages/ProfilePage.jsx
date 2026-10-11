@@ -3,8 +3,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import useAuthUser from '../hooks/useAuthUser';
-import { updateProfile } from '../lib/api';
-import { Camera, ShuffleIcon, ArrowLeft, Save } from 'lucide-react';
+import { updateProfile, uploadAvatar } from '../lib/api';
+import { Camera, ShuffleIcon, ArrowLeft, Save, Upload } from 'lucide-react';
 import { LANGUAGES } from '../constants/index.js';
 import LazyImage from '../components/LazyImage';
 import { getOptimizedImageDataUrl } from '../lib/image.js';
@@ -21,6 +21,7 @@ const ProfilePage = () => {
     profilePic: authUser?.profilePic || '',
     location: authUser?.location || '',
   });
+  const [uploadingPic, setUploadingPic] = useState(false);
 
   const { mutate: updateMutation, isPending } = useMutation({
     mutationFn: updateProfile,
@@ -60,17 +61,33 @@ const ProfilePage = () => {
 
   const handleProfilePictureUpload = async (event) => {
     const file = event.target.files?.[0];
-
-    if (!file) {
-      return;
-    }
+    if (!file) return;
 
     try {
-      const optimizedProfilePic = await getOptimizedImageDataUrl(file);
-      setFormState((prev) => ({ ...prev, profilePic: optimizedProfilePic }));
-    } catch {
-      toast.error('Failed to process image, please try again');
+      setUploadingPic(true);
+      // Resize/compress locally first so we stay under Supabase's limits
+      const optimizedDataUrl = await getOptimizedImageDataUrl(file, {
+        maxDimension: 512,
+        quality: 0.85,
+      });
+
+      // Upload to Supabase via the backend endpoint
+      const data = await uploadAvatar(optimizedDataUrl);
+
+      // Use the returned public URL (not the base64) going forward
+      setFormState((prev) => ({ ...prev, profilePic: data.profilePic }));
+      toast.success('Profile picture updated!');
+    } catch (err) {
+      // Fall back to local base64 if Supabase isn't configured yet
+      try {
+        const fallback = await getOptimizedImageDataUrl(file);
+        setFormState((prev) => ({ ...prev, profilePic: fallback }));
+        toast.success('Avatar set locally (Supabase not configured)');
+      } catch {
+        toast.error('Failed to process image, please try again');
+      }
     } finally {
+      setUploadingPic(false);
       event.target.value = '';
     }
   };
@@ -123,8 +140,12 @@ const ProfilePage = () => {
                       accept="image/*"
                       className="hidden"
                       onChange={handleProfilePictureUpload}
+                      disabled={uploadingPic}
                     />
                   </label>
+                  {uploadingPic && (
+                    <span className="loading loading-spinner loading-sm text-primary" />
+                  )}
                 </div>
               </div>
 
