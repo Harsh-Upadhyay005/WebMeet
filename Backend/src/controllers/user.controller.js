@@ -146,3 +146,61 @@ export async function getOutgoingFriendReqquests(req, res) {
         res.status(500).json({message: "Internal Server Error" });
     }
 }
+
+export async function rejectFriendRequest(req, res) {
+    try {
+        const { id: requestId } = req.params;
+
+        const friendRequest = await FriendRequest.findById(requestId);
+        if (!friendRequest) {
+            return res.status(404).json({ message: "Friend request not found" });
+        }
+
+        if (friendRequest.recipient.toString() !== req.user.id) {
+            return res.status(403).json({ message: "Not authorized to reject this request" });
+        }
+
+        await FriendRequest.findByIdAndDelete(requestId);
+
+        res.status(200).json({ message: "Friend request rejected" });
+    } catch (error) {
+        console.error("Error rejecting friend request:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+export async function removeFriend(req, res) {
+    try {
+        const myId = req.user.id;
+        const { id: friendId } = req.params;
+
+        const [me, friend] = await Promise.all([
+            User.findById(myId),
+            User.findById(friendId),
+        ]);
+
+        if (!me || !friend) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (!me.friends.includes(friendId)) {
+            return res.status(400).json({ message: "This user is not your friend" });
+        }
+
+        await Promise.all([
+            User.findByIdAndUpdate(myId, { $pull: { friends: friendId } }),
+            User.findByIdAndUpdate(friendId, { $pull: { friends: myId } }),
+            FriendRequest.deleteOne({
+                $or: [
+                    { sender: myId, recipient: friendId },
+                    { sender: friendId, recipient: myId },
+                ],
+            }),
+        ]);
+
+        res.status(200).json({ message: "Friend removed successfully" });
+    } catch (error) {
+        console.error("Error removing friend:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
